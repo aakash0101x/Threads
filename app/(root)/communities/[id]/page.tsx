@@ -10,11 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 
-async function Page({ params }: { params: { id: string } }) {
+async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   const user = await currentUser();
   if (!user) return null;
 
-  const communityDetails = await fetchCommunityDetails(params.id);
+  const communityDetails = await fetchCommunityDetails(id);
 
   return (
     <section>
@@ -55,7 +57,7 @@ async function Page({ params }: { params: { id: string } }) {
             {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
-              accountId={communityDetails._id}
+              accountId={String(communityDetails._id)}
               accountType='Community'
             />
           </TabsContent>
@@ -79,7 +81,7 @@ async function Page({ params }: { params: { id: string } }) {
             {/* @ts-ignore */}
             <ThreadsTab
               currentUserId={user.id}
-              accountId={communityDetails._id}
+              accountId={String(communityDetails._id)}
               accountType='Community'
             />
           </TabsContent>

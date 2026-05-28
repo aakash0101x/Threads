@@ -10,18 +10,18 @@ import { fetchUser } from "@/lib/actions/user.actions";
 async function Home({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
+  const { page } = await searchParams;
+  const pageNumber = page ? +page : 1;
+
   const user = await currentUser();
   if (!user) return null;
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  const result = await fetchPosts(
-    searchParams.page ? +searchParams.page : 1,
-    30
-  );
+  const result = await fetchPosts(pageNumber, 30);
 
   return (
     <>
@@ -49,11 +49,7 @@ async function Home({
         )}
       </section>
 
-      <Pagination
-        path='/'
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={result.isNext}
-      />
+      <Pagination path='/' pageNumber={pageNumber} isNext={result.isNext} />
     </>
   );
 }

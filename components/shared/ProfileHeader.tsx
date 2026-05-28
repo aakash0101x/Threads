@@ -29,6 +29,7 @@ function ProfileHeader({
               src={imgUrl}
               alt='logo'
               fill
+              sizes='80px'
               className='rounded-full object-cover shadow-2xl'
             />
           </div>
